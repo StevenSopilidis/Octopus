@@ -1,7 +1,6 @@
 {
     "dependencies": [
-        "yaml-cpp",
-        "nlohmann-json",
-        "json-schema-validator"
+        "rapidjson",
+        "nlohmann-json"
     ]
 }

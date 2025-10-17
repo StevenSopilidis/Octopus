@@ -1,0 +1,153 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Task Scheduler Configuration",
+    "type": "object",
+    "required": [
+        "tasks"
+    ],
+    "properties": {
+        "version": {
+            "type": "string",
+            "default": "1.0"
+        },
+        "tasks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "command",
+                    "trigger"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_-]+$"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "command": {
+                        "type": "string"
+                    },
+                    "args": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "default": []
+                    },
+                    "working_dir": {
+                        "type": "string"
+                    },
+                    "env": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "trigger": {
+                        "type": "object",
+                        "required": [
+                            "type"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "immediate",
+                                    "delayed",
+                                    "interval",
+                                    "cron"
+                                ]
+                            },
+                            "delay_seconds": {
+                                "type": "integer",
+                                "minimum": 0
+                            },
+                            "interval_seconds": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "cron_expr": {
+                                "type": "string"
+                            }
+                        },
+                        "allOf": [
+                            {
+                                "if": {
+                                    "properties": {
+                                        "type": {
+                                            "const": "delayed"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "delay_seconds"
+                                    ]
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "type": {
+                                            "const": "interval"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "interval_seconds"
+                                    ]
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "type": {
+                                            "const": "cron"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "cron_expr"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "dependencies": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true,
+                        "default": []
+                    },
+                    "retry_policy": {
+                        "type": "object",
+                        "properties": {
+                            "max_retries": {
+                                "type": "integer",
+                                "minimum": 0
+                            },
+                            "delay_seconds": {
+                                "type": "integer",
+                                "minimum": 0
+                            }
+                        },
+                        "required": [
+                            "max_retries",
+                            "delay_seconds"
+                        ]
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

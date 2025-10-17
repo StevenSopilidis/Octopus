@@ -4,7 +4,7 @@ project("octopus" LANGUAGES CXX ASM)
 
 find_package(PkgConfig REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
+
 
 include(CTest)
 
